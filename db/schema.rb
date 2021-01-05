@@ -10,10 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_04_183501) do
+ActiveRecord::Schema.define(version: 2021_01_05_185714) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "boards", force: :cascade do |t|
+    t.text "template", default: [], array: true
+    t.integer "counter"
+    t.bigint "game_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_boards_on_game_id"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.integer "win"
+    t.integer "lost"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_games_on_user_id"
+  end
+
+  create_table "moves", force: :cascade do |t|
+    t.integer "position"
+    t.bigint "user_id"
+    t.bigint "board_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["board_id"], name: "index_moves_on_board_id"
+    t.index ["user_id"], name: "index_moves_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -27,4 +55,8 @@ ActiveRecord::Schema.define(version: 2021_01_04_183501) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "boards", "games"
+  add_foreign_key "games", "users"
+  add_foreign_key "moves", "boards"
+  add_foreign_key "moves", "users"
 end

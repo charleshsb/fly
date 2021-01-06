@@ -5,6 +5,7 @@ class Board < ApplicationRecord
   def initialize
     @board = Board.new(self)
     @game = Game.new
+    @move = Move.new
     @board.template = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
     @board.counter = 0
     @board.user_id = current_user
